@@ -1,0 +1,560 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:ip_locator/domain/entities/ip_location_data.dart';
+import 'package:ip_locator/l10n/app_localizations.dart';
+import 'package:ip_locator/l10n/app_localizations_en.dart';
+import 'package:ip_locator/utils/ip_location_data_utils.dart';
+import 'package:ip_locator/utils/localized_ip_location_data_utils.dart';
+
+void main() {
+  group('LocalizedIpLocationDataUtils Tests', () {
+    late AppLocalizations localizations;
+    late IpLocationData sampleData;
+    late BuildContext mockContext;
+
+    setUp(() {
+      localizations = AppLocalizationsEn();
+      sampleData = IpLocationData(
+        ip: '8.8.8.8',
+        network: '8.8.8.0/24',
+        version: 'IPv4',
+        city: 'Mountain View',
+        region: 'California',
+        regionCode: 'CA',
+        country: 'United States',
+        countryName: 'United States',
+        countryCode: 'US',
+        countryCodeIso3: 'USA',
+        countryCapital: 'Washington D.C.',
+        countryTld: '.us',
+        continentCode: 'NA',
+        inEu: false,
+        postal: '94043',
+        latitude: 37.419200,
+        longitude: -122.057400,
+        timezone: 'America/Los_Angeles',
+        utcOffset: '-0800',
+        countryCallingCode: '+1',
+        currency: 'USD',
+        currencyName: 'US Dollar',
+        languages: 'en-US,es-US,haw,fr',
+        countryArea: 9629091.0,
+        countryPopulation: 310232863,
+        asn: 'AS15169',
+        org: 'Google LLC',
+      );
+    });
+
+    Widget createTestApp({required Widget child}) {
+      return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Builder(
+          builder: (context) {
+            mockContext = context;
+            return child;
+          },
+        ),
+      );
+    }
+
+    group('getLocationInfo Tests', () {
+      testWidgets('should return localized location information items', (WidgetTester tester) async {
+        List<InfoItem>? locationInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(locationInfo, isNotNull);
+        expect(locationInfo!.isNotEmpty, isTrue);
+
+        // Check that IP address is included
+        final ipItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.ipAddress,
+          orElse: () => InfoItem('', ''),
+        );
+        expect(ipItem.value, equals('8.8.8.8'));
+
+        // Check that city is included
+        final cityItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.city,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(cityItem.value, equals('Mountain View'));
+
+        // Check that country is included
+        final countryItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.country,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(countryItem.value, equals('United States'));
+      });
+
+      testWidgets('should handle null data gracefully', (WidgetTester tester) async {
+        List<InfoItem>? locationInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(null, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(locationInfo, isNotNull);
+        // Should still return items with N/A values
+        expect(locationInfo!.isNotEmpty, isTrue);
+        
+        final ipItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.ipAddress,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(ipItem.value, equals(localizations.notAvailable));
+      });
+
+      testWidgets('should use correct localized labels', (WidgetTester tester) async {
+        List<InfoItem>? locationInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        // Verify all expected localized labels are present
+        final labels = locationInfo!.map((item) => item.label).toList();
+        expect(labels, contains(localizations.ipAddress));
+        expect(labels, contains(localizations.city));
+        expect(labels, contains(localizations.region));
+        expect(labels, contains(localizations.country));
+        expect(labels, contains(localizations.timezone));
+      });
+    });
+
+    group('getNetworkInfo Tests', () {
+      testWidgets('should return localized network information items', (WidgetTester tester) async {
+        List<InfoItem>? networkInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              networkInfo = LocalizedIpLocationDataUtils.getNetworkInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(networkInfo, isNotNull);
+        expect(networkInfo!.isNotEmpty, isTrue);
+
+        // Check that network is included
+        final networkItem = networkInfo!.firstWhere(
+          (item) => item.label == localizations.network,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(networkItem.value, equals('8.8.8.0/24'));
+
+        // Check that version is included
+        final versionItem = networkInfo!.firstWhere(
+          (item) => item.label == localizations.version,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(versionItem.value, equals('IPv4'));
+
+        // Check that ASN is included
+        final asnItem = networkInfo!.firstWhere(
+          (item) => item.label == localizations.asn,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(asnItem.value, equals('AS15169'));
+
+        // Check that organization is included
+        final orgItem = networkInfo!.firstWhere(
+          (item) => item.label == localizations.organization,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(orgItem.value, equals('Google LLC'));
+      });
+
+      testWidgets('should handle null data gracefully for network info', (WidgetTester tester) async {
+        List<InfoItem>? networkInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              networkInfo = LocalizedIpLocationDataUtils.getNetworkInfo(null, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(networkInfo, isNotNull);
+        expect(networkInfo!.isNotEmpty, isTrue);
+        
+        final networkItem = networkInfo!.firstWhere(
+          (item) => item.label == localizations.network,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(networkItem.value, equals(localizations.notAvailable));
+      });
+    });
+
+    group('getGeographicInfo Tests', () {
+      testWidgets('should return localized geographic information items', (WidgetTester tester) async {
+        List<InfoItem>? geographicInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              geographicInfo = LocalizedIpLocationDataUtils.getGeographicInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(geographicInfo, isNotNull);
+        expect(geographicInfo!.isNotEmpty, isTrue);
+
+        // Check that coordinates are included
+        final coordinatesItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.coordinates,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(coordinatesItem.value, contains('37.4192'));
+        expect(coordinatesItem.value, contains('-122.0574'));
+
+        // Check that postal code is included
+        final postalItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.postalCode,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(postalItem.value, equals('94043'));
+
+        // Check that continent is included
+        final continentItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.continent,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(continentItem.value, equals('NA'));
+
+        // Check that EU status is included with localized boolean
+        final euItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.inEu,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(euItem.value, equals(localizations.no));
+
+        // Check that currency is included
+        final currencyItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.currency,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(currencyItem.value, equals('USD (US Dollar)'));
+
+        // Check that languages are included
+        final languagesItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.languages,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(languagesItem.value, equals('en-US,es-US,haw,fr'));
+      });
+
+      testWidgets('should handle EU country correctly', (WidgetTester tester) async {
+        final euData = IpLocationData(
+          ip: '8.8.4.4',
+          network: '',
+          version: 'IPv4',
+          city: 'Paris',
+          region: '',
+          regionCode: '',
+          country: 'France',
+          countryName: 'France',
+          countryCode: 'FR',
+          countryCodeIso3: 'FRA',
+          countryCapital: 'Paris',
+          countryTld: '.fr',
+          continentCode: 'EU',
+          inEu: true, // EU country
+          postal: '',
+          latitude: 48.8566,
+          longitude: 2.3522,
+          timezone: 'Europe/Paris',
+          utcOffset: '+0100',
+          countryCallingCode: '+33',
+          currency: 'EUR',
+          currencyName: 'Euro',
+          languages: 'fr',
+          countryArea: 643801.0,
+          countryPopulation: 67081000,
+          asn: '',
+          org: '',
+        );
+
+        List<InfoItem>? geographicInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              geographicInfo = LocalizedIpLocationDataUtils.getGeographicInfo(euData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        final euItem = geographicInfo!.firstWhere(
+          (item) => item.label == localizations.inEu,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(euItem.value, equals(localizations.yes));
+      });
+    });
+
+    group('getExtendedLocationInfo Tests', () {
+      testWidgets('should return extended location information with additional details', (WidgetTester tester) async {
+        List<InfoItem>? extendedInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              extendedInfo = LocalizedIpLocationDataUtils.getExtendedLocationInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(extendedInfo, isNotNull);
+        expect(extendedInfo!.length, greaterThan(5)); // Should have more items than basic info
+
+        // Check for basic location info
+        final ipItem = extendedInfo!.firstWhere(
+          (item) => item.label == localizations.ipAddress,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(ipItem.value, equals('8.8.8.8'));
+
+        // Check for extended info items
+        final countryCodeItem = extendedInfo!.firstWhere(
+          (item) => item.label == localizations.countryCode,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(countryCodeItem.value, equals('US'));
+
+        final countryCapitalItem = extendedInfo!.firstWhere(
+          (item) => item.label == localizations.countryCapital,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(countryCapitalItem.value, equals('Washington D.C.'));
+
+        final callingCodeItem = extendedInfo!.firstWhere(
+          (item) => item.label == localizations.callingCode,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(callingCodeItem.value, equals('+1'));
+      });
+
+      testWidgets('should include all expected extended labels', (WidgetTester tester) async {
+        List<InfoItem>? extendedInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              extendedInfo = LocalizedIpLocationDataUtils.getExtendedLocationInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        final labels = extendedInfo!.map((item) => item.label).toList();
+        
+        // Basic labels
+        expect(labels, contains(localizations.ipAddress));
+        expect(labels, contains(localizations.city));
+        expect(labels, contains(localizations.region));
+        expect(labels, contains(localizations.country));
+        expect(labels, contains(localizations.timezone));
+        
+        // Extended labels
+        expect(labels, contains(localizations.countryCode));
+        expect(labels, contains(localizations.countryIso3));
+        expect(labels, contains(localizations.countryCapital));
+        expect(labels, contains(localizations.countryTld));
+        expect(labels, contains(localizations.callingCode));
+        expect(labels, contains(localizations.utcOffset));
+      });
+    });
+
+    group('getExtendedGeographicInfo Tests', () {
+      testWidgets('should return extended geographic information', (WidgetTester tester) async {
+        List<InfoItem>? extendedGeoInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              extendedGeoInfo = LocalizedIpLocationDataUtils.getExtendedGeographicInfo(sampleData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(extendedGeoInfo, isNotNull);
+        expect(extendedGeoInfo!.isNotEmpty, isTrue);
+
+        // Check that it includes basic geographic info
+        final coordinatesItem = extendedGeoInfo!.firstWhere(
+          (item) => item.label == localizations.coordinates,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(coordinatesItem.value, contains('37.4192'));
+
+        // Should have more items than basic geographic info
+        expect(extendedGeoInfo!.length, greaterThan(3));
+      });
+    });
+
+    group('Edge Cases and Error Handling', () {
+      testWidgets('should handle empty location data fields', (WidgetTester tester) async {
+        final emptyData = IpLocationData(
+          ip: '',
+          network: '',
+          version: '',
+          city: '',
+          region: '',
+          regionCode: '',
+          country: '',
+          countryName: '',
+          countryCode: '',
+          countryCodeIso3: '',
+          countryCapital: '',
+          countryTld: '',
+          continentCode: '',
+          inEu: false,
+          postal: '',
+          latitude: 0.0,
+          longitude: 0.0,
+          timezone: '',
+          utcOffset: '',
+          countryCallingCode: '',
+          currency: '',
+          currencyName: '',
+          languages: '',
+          countryArea: 0.0,
+          countryPopulation: 0,
+          asn: '',
+          org: '',
+        );
+
+        List<InfoItem>? locationInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(emptyData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        expect(locationInfo, isNotNull);
+        expect(locationInfo!.isNotEmpty, isTrue);
+
+        // Empty fields should show as N/A
+        final ipItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.ipAddress,
+          orElse: () => InfoItem(label: '', value: ''),
+        );
+        expect(ipItem.value, equals(localizations.notAvailable));
+      });
+
+      testWidgets('should handle partial location data', (WidgetTester tester) async {
+        final partialData = IpLocationData(
+          ip: '192.168.1.1',
+          network: '',
+          version: 'IPv4',
+          city: 'Unknown City',
+          region: '',
+          regionCode: '',
+          country: 'Unknown Country',
+          countryName: 'Unknown Country',
+          countryCode: '',
+          countryCodeIso3: '',
+          countryCapital: '',
+          countryTld: '',
+          continentCode: '',
+          inEu: false,
+          postal: '',
+          latitude: 0.0,
+          longitude: 0.0,
+          timezone: '',
+          utcOffset: '',
+          countryCallingCode: '',
+          currency: '',
+          currencyName: '',
+          languages: '',
+          countryArea: 0.0,
+          countryPopulation: 0,
+          asn: '',
+          org: '',
+        );
+
+        List<InfoItem>? locationInfo;
+
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(partialData, context);
+              return const SizedBox();
+            },
+          ),
+        ));
+
+        final ipItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.ipAddress,
+        );
+        expect(ipItem.value, equals('192.168.1.1'));
+
+        final cityItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.city,
+        );
+        expect(cityItem.value, equals('Unknown City'));
+
+        final countryItem = locationInfo!.firstWhere(
+          (item) => item.label == localizations.country,
+        );
+        expect(countryItem.value, equals('Unknown Country'));
+      });
+
+      testWidgets('should handle all method calls with consistent localization', (WidgetTester tester) async {
+        await tester.pumpWidget(createTestApp(
+          child: Builder(
+            builder: (context) {
+              final locationInfo = LocalizedIpLocationDataUtils.getLocationInfo(sampleData, context);
+              final networkInfo = LocalizedIpLocationDataUtils.getNetworkInfo(sampleData, context);
+              final geographicInfo = LocalizedIpLocationDataUtils.getGeographicInfo(sampleData, context);
+              final extendedLocationInfo = LocalizedIpLocationDataUtils.getExtendedLocationInfo(sampleData, context);
+              final extendedGeographicInfo = LocalizedIpLocationDataUtils.getExtendedGeographicInfo(sampleData, context);
+
+              // All should return non-empty lists
+              expect(locationInfo.isNotEmpty, isTrue);
+              expect(networkInfo.isNotEmpty, isTrue);
+              expect(geographicInfo.isNotEmpty, isTrue);
+              expect(extendedLocationInfo.isNotEmpty, isTrue);
+              expect(extendedGeographicInfo.isNotEmpty, isTrue);
+
+              return const SizedBox();
+            },
+          ),
+        ));
+      });
+    });
+  });
+}

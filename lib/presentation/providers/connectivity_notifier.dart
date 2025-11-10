@@ -7,41 +7,64 @@ class ConnectivityService {
   ConnectivityService._internal();
   static final ConnectivityService _instance = ConnectivityService._internal();
 
-  final StreamController<bool> _connectivityController =
-      StreamController<bool>.broadcast();
+  StreamController<bool>? _connectivityController;
   Timer? _timer;
   bool _isConnected = false;
+  bool _isDisposed = false;
 
-  Stream<bool> get connectivityStream => _connectivityController.stream;
+  Stream<bool> get connectivityStream {
+    if (_connectivityController == null || _connectivityController!.isClosed) {
+      _connectivityController = StreamController<bool>.broadcast();
+    }
+    return _connectivityController!.stream;
+  }
+  
   bool get isConnected => _isConnected;
 
   void initialize({Duration checkInterval = const Duration(seconds: 5)}) {
+    if (_isDisposed) {
+      _isDisposed = false;
+      _connectivityController = StreamController<bool>.broadcast();
+    }
+    
     // Initial check
     _checkConnection();
 
     // Periodic checks
+    _timer?.cancel(); // Cancel existing timer if any
     _timer = Timer.periodic(checkInterval, (_) => _checkConnection());
   }
 
   Future<void> _checkConnection() async {
+    if (_isDisposed || _connectivityController == null || _connectivityController!.isClosed) {
+      return;
+    }
+    
     try {
       final result = await InternetAddress.lookup('google.com');
       final connected = result.isNotEmpty && result.first.rawAddress.isNotEmpty;
       if (connected != _isConnected) {
         _isConnected = connected;
-        _connectivityController.add(_isConnected);
+        if (!_connectivityController!.isClosed) {
+          _connectivityController!.add(_isConnected);
+        }
       }
     } catch (_) {
       if (_isConnected != false) {
         _isConnected = false;
-        _connectivityController.add(false);
+        if (!_isDisposed && !_connectivityController!.isClosed) {
+          _connectivityController!.add(false);
+        }
       }
     }
   }
 
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
-    _connectivityController.close();
+    _timer = null;
+    _connectivityController?.close();
+    _connectivityController = null;
   }
 }
 
