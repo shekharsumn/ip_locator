@@ -2,6 +2,10 @@
 
 A Flutter app that finds location details for any IP address or your current location.
 
+## Demo Video
+
+🎥 [Watch the app demo on YouTube](https://youtube.com/shorts/rB5m96YVx4E?si=ZhIXLq2K5MPs5I-3)
+
 ## What it does
 
 - **Enter an IP address** → Get location details (city, country, timezone, etc.)
