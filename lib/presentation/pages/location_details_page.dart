@@ -18,6 +18,8 @@ class LocationDetailsPage extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.appTitle),
+          centerTitle: true,
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           bottom: TabBar(
             tabs: [
               Tab(text: AppLocalizations.of(context)!.yourLocation),

@@ -30,6 +30,7 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
+        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: SingleChildScrollView(
@@ -95,6 +96,7 @@ class HomePage extends ConsumerWidget {
                 onPressed: state.isLoading
                     ? null
                     : () {
+                        FocusScope.of(context).unfocus(); // Hide keyboard
                         viewModel.fetchCurrentIpLocationData();
                         viewModel.clearIpAddress(); // Clear text field after current IP fetch
                       },
@@ -156,6 +158,7 @@ class HomePage extends ConsumerWidget {
                 title: 'Error ${state.apiError!.errorIcon}',
                 message: state.apiError!.userFriendlyMessage,
                 onRetry: () {
+                  FocusScope.of(context).unfocus(); // Hide keyboard
                   if (state.apiError!.type == ApiErrorType.network) {
                     viewModel.retryAfterConnectivityRestore();
                   } else {

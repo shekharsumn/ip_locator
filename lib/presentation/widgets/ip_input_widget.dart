@@ -85,6 +85,7 @@ class _IpInputWidgetState extends State<IpInputWidget> {
           textInputAction: TextInputAction.done,
           onSubmitted: (_) {
             if (widget.canFetch) {
+              FocusScope.of(context).unfocus(); // Hide keyboard
               widget.onFetchPressed();
             }
           },
@@ -93,7 +94,10 @@ class _IpInputWidgetState extends State<IpInputWidget> {
         SizedBox(
           height: 48,
           child: ElevatedButton.icon(
-            onPressed: widget.canFetch ? widget.onFetchPressed : null,
+            onPressed: widget.canFetch ? () {
+              FocusScope.of(context).unfocus(); // Hide keyboard
+              widget.onFetchPressed();
+            } : null,
             icon: widget.isLoading
                 ? const SizedBox(
                     width: 20,
