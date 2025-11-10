@@ -1,0 +1,251 @@
+{
+  "@@locale": "en",
+  "appTitle": "IP Info Locator",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button text for retry action"
+  },
+  "goBack": "Go Back",
+  "@goBack": {
+    "description": "Button text for going back"
+  },
+  "noInternetConnection": "No internet connection",
+  "@noInternetConnection": {
+    "description": "Error message when offline"
+  },
+  "noInternetConnectionDescription": "Unable to load. Please check your internet connection and try again.",
+  "@noInternetConnectionDescription": {
+    "description": "Detailed message when offline"
+  },
+  "connectToInternetToLoadNewPosts": "Connect to internet to load new posts",
+  "@connectToInternetToLoadNewPosts": {
+    "description": "Message prompting user to connect to internet"
+  },
+  "badRequest": "Bad request",
+  "@badRequest": {
+    "description": "HTTP 400 error message"
+  },
+  "unauthorized": "Unauthorized",
+  "@unauthorized": {
+    "description": "HTTP 401 error message"
+  },
+  "notFound": "Not found",
+  "@notFound": {
+    "description": "HTTP 404 error message"
+  },
+  "serverError": "Server error",
+  "@serverError": {
+    "description": "HTTP 500+ error message"
+  },
+  "networkError": "Network error",
+  "@networkError": {
+    "description": "Network connectivity error"
+  },
+  "connectionTimeout": "Connection timeout",
+  "@connectionTimeout": {
+    "description": "Connection timeout error"
+  },
+  "requestCancelled": "Request cancelled",
+  "@requestCancelled": {
+    "description": "Request cancelled error"
+  },
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
+  },
+  "noDataAvailable": "No data available",
+  "@noDataAvailable": {
+    "description": "Message shown when no data is available from the server"
+  },
+  "refreshLocation": "Refresh Location",
+  "@refreshLocation": {
+    "description": "Tooltip text for refresh location button"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Generic error title"
+  },
+  "apiError": "API Error",
+  "@apiError": {
+    "description": "API specific error title"
+  },
+  "fetchingIpLocation": "Fetching your IP location...",
+  "@fetchingIpLocation": {
+    "description": "Loading message while fetching IP location"
+  },
+  "locationInformation": "Location Information",
+  "@locationInformation": {
+    "description": "Title for location information section"
+  },
+  "networkInformation": "Network Information",
+  "@networkInformation": {
+    "description": "Title for network information section"
+  },
+  "geographicDetails": "Geographic Details",
+  "@geographicDetails": {
+    "description": "Title for geographic details section"
+  },
+  "pleaseCheckInternetConnection": "Please check your internet connection and try again",
+  "@pleaseCheckInternetConnection": {
+    "description": "Message shown when internet connection is needed"
+  },
+  "ipAddress": "IP Address",
+  "@ipAddress": {
+    "description": "Label for IP address field"
+  },
+  "city": "City",
+  "@city": {
+    "description": "Label for city field"
+  },
+  "region": "Region",
+  "@region": {
+    "description": "Label for region field"
+  },
+  "country": "Country",
+  "@country": {
+    "description": "Label for country field"
+  },
+  "timezone": "Timezone",
+  "@timezone": {
+    "description": "Label for timezone field"
+  },
+  "network": "Network",
+  "@network": {
+    "description": "Label for network field"
+  },
+  "version": "Version",
+  "@version": {
+    "description": "Label for version field"
+  },
+  "asn": "ASN",
+  "@asn": {
+    "description": "Label for ASN field"
+  },
+  "organization": "Organization",
+  "@organization": {
+    "description": "Label for organization field"
+  },
+  "coordinates": "Coordinates",
+  "@coordinates": {
+    "description": "Label for coordinates field"
+  },
+  "postalCode": "Postal Code",
+  "@postalCode": {
+    "description": "Label for postal code field"
+  },
+  "continent": "Continent",
+  "@continent": {
+    "description": "Label for continent field"
+  },
+  "inEu": "In EU",
+  "@inEu": {
+    "description": "Label for EU membership field"
+  },
+  "currency": "Currency",
+  "@currency": {
+    "description": "Label for currency field"
+  },
+  "currencyName": "Currency Name",
+  "@currencyName": {
+    "description": "Label for currency name field"
+  },
+  "languages": "Languages",
+  "@languages": {
+    "description": "Label for languages field"
+  },
+  "countryCode": "Country Code",
+  "@countryCode": {
+    "description": "Label for country code field"
+  },
+  "countryIso3": "Country ISO3",
+  "@countryIso3": {
+    "description": "Label for country ISO3 field"
+  },
+  "countryCapital": "Country Capital",
+  "@countryCapital": {
+    "description": "Label for country capital field"
+  },
+  "countryTld": "Country TLD",
+  "@countryTld": {
+    "description": "Label for country TLD field"
+  },
+  "callingCode": "Calling Code",
+  "@callingCode": {
+    "description": "Label for calling code field"
+  },
+  "utcOffset": "UTC Offset",
+  "@utcOffset": {
+    "description": "Label for UTC offset field"
+  },
+  "countryArea": "Country Area",
+  "@countryArea": {
+    "description": "Label for country area field"
+  },
+  "population": "Population",
+  "@population": {
+    "description": "Label for population field"
+  },
+  "location": "Location",
+  "@location": {
+    "description": "Label for combined location field"
+  },
+  "isp": "ISP",
+  "@isp": {
+    "description": "Label for ISP field"
+  },
+  "notAvailable": "N/A",
+  "@notAvailable": {
+    "description": "Text displayed when data is not available"
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Affirmative boolean value"
+  },
+  "no": "No",
+  "@no": {
+    "description": "Negative boolean value"
+  },
+  "squareKilometers": "sq km",
+  "@squareKilometers": {
+    "description": "Unit abbreviation for square kilometers"
+  },
+  "capital": "Capital",
+  "@capital": {
+    "description": "Label for capital city"
+  },
+  "anErrorOccurred": "An error occurred",
+  "@anErrorOccurred": {
+    "description": "Default error message when no specific error is available"
+  },
+  "yourLocation": "Your Location",
+  "@yourLocation": {
+    "description": "user location in map view"
+  },
+  "moreInfo": "More Info",
+  "@moreInfo": {
+    "description": "More info on user IP location"
+  },
+  "getCurrentIpLocation": "Get My Current IP Location",
+  "@getCurrentIpLocation": {
+    "description": "Button text to get current IP location"
+  },
+  "gettingCurrentIp": "Getting Current IP...",
+  "@gettingCurrentIp": {
+    "description": "Loading text when getting current IP"
+  },
+  "enterIpAddress": "Enter IP Address",
+  "@enterIpAddress": {
+    "description": "Title for IP address input section"
+  },
+  "enterIpAddressDescription": "Enter an IPv4 or IPv6 address to get location details",
+  "@enterIpAddressDescription": {
+    "description": "Description for IP address input section"
+  },
+  "or": "OR",
+  "@or": {
+    "description": "Divider text between two options"
+  }
+}
